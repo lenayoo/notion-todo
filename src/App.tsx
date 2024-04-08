@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import "./App.css";
 
 const App = () => {
@@ -10,12 +10,14 @@ const App = () => {
     setTodo(value);
   };
 
-  const submitHandler = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setList([...list, todo]);
-    setTodo("");
-  };
-  console.log(list);
+  const submitHandler = useCallback(
+    (e: React.FormEvent<HTMLFormElement>) => {
+      e.preventDefault();
+      setList([...list, todo]);
+      setTodo("");
+    },
+    [list, todo]
+  );
 
   return (
     <div className="flex justify-center items-center flex-col">
