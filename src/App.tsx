@@ -19,6 +19,10 @@ const App = () => {
     [list, todo]
   );
 
+  const editHandler = (todo: string) => {
+    console.log("clicked", todo);
+  };
+
   return (
     <div className="flex justify-center items-center flex-col">
       <div className="header">
@@ -40,6 +44,13 @@ const App = () => {
           {list.map((todo, index) => (
             <li key={index}>
               {index + 1} . {todo}
+              <button
+                type="submit"
+                className=""
+                onClick={() => editHandler(todo)}
+              >
+                edit
+              </button>
             </li>
           ))}
         </ul>
