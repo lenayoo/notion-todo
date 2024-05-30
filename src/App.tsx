@@ -4,6 +4,7 @@ import "./App.css";
 const App = () => {
   const [todo, setTodo] = useState<string>("");
   const [list, setList] = useState<string[]>([]);
+  const [editing, setEditing] = useState<boolean>(false);
 
   const changeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -20,8 +21,11 @@ const App = () => {
   );
 
   const editHandler = (todo: string) => {
-    console.log("clicked", todo);
+    console.log("clicked", { todo });
+    setEditing(true);
   };
+
+  const saveHandler = () => {};
 
   return (
     <div className="flex justify-center items-center flex-col">
@@ -41,18 +45,31 @@ const App = () => {
           </button>
         </form>
         <ul className="text-left pl-[20px] pt-4 text-lg">
-          {list.map((todo, index) => (
-            <li key={index}>
-              {index + 1} . {todo}
-              <button
-                type="submit"
-                className=""
-                onClick={() => editHandler(todo)}
-              >
-                edit
-              </button>
-            </li>
-          ))}
+          {list.map((todo, index) =>
+            editing ? (
+              <li key={index}>
+                {index + 1} . {todo}
+                <button
+                  type="submit"
+                  className=""
+                  onClick={() => saveHandler(todo)}
+                >
+                  save
+                </button>
+              </li>
+            ) : (
+              <li key={index}>
+                {index + 1} . {todo}
+                <button
+                  type="submit"
+                  className=""
+                  onClick={() => editHandler(todo)}
+                >
+                  edit
+                </button>
+              </li>
+            )
+          )}
         </ul>
       </div>
     </div>
