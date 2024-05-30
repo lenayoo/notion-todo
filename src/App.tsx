@@ -4,7 +4,8 @@ import "./App.css";
 const App = () => {
   const [todo, setTodo] = useState<string>("");
   const [list, setList] = useState<string[]>([]);
-  const [editing, setEditing] = useState<boolean>(false);
+  const [isEditing, setIsEditing] = useState<number | null>(null);
+  const [newTodo, setNewTodo] = useState<string>("");
 
   const changeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -20,12 +21,19 @@ const App = () => {
     [list, todo]
   );
 
-  const editHandler = (todo: string) => {
-    console.log("clicked", { todo });
-    setEditing(true);
+  const editHandler = ({ todo, index }: { todo: string; index: number }) => {
+    console.log("clicked", { todo, index });
+    setIsEditing(index);
   };
 
-  const saveHandler = () => {};
+  const editValueHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setNewTodo(value);
+  };
+
+  const saveHandler = (newTodo: string, index: number) => {
+    setList([...list, newTodo]);
+  };
 
   return (
     <div className="flex justify-center items-center flex-col">
@@ -46,15 +54,20 @@ const App = () => {
         </form>
         <ul className="text-left pl-[20px] pt-4 text-lg">
           {list.map((todo, index) =>
-            editing ? (
+            isEditing === index ? (
               <li key={index}>
-                {index + 1} . {todo}
+                <input
+                  type="text"
+                  className="w-48 rounded mr-4 py-1 px-3"
+                  onChange={editValueHandler}
+                  value={newTodo}
+                />
                 <button
                   type="submit"
                   className=""
-                  onClick={() => saveHandler(todo)}
+                  onClick={() => saveHandler(newTodo, index)}
                 >
-                  save
+                  {isEditing === index ? "save" : "edit"}
                 </button>
               </li>
             ) : (
@@ -63,7 +76,7 @@ const App = () => {
                 <button
                   type="submit"
                   className=""
-                  onClick={() => editHandler(todo)}
+                  onClick={() => editHandler({ todo, index })}
                 >
                   edit
                 </button>
