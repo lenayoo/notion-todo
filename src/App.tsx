@@ -2,37 +2,47 @@ import { useCallback, useState } from "react";
 import "./App.css";
 
 const App = () => {
-  const [todo, setTodo] = useState<string>("");
-  const [list, setList] = useState<string[]>([]);
-  const [isEditing, setIsEditing] = useState<number | null>(null);
-  const [newTodo, setNewTodo] = useState<string>("");
+  type Todo = { id: number | undefined; oneTodo: string };
+
+  const [todo, setTodo] = useState<Todo>({
+    id: undefined,
+    oneTodo: ""
+  });
+  const [list, setList] = useState<Todo[]>([]);
+  const [isEditing, setIsEditing] = useState<number | undefined>(undefined);
+  const [editTodo, setEditTodo] = useState<Todo>({
+    id: undefined,
+    oneTodo: ""
+  });
 
   const changeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    setTodo(value);
+    setTodo({ id: Date.now(), oneTodo: value });
   };
 
   const submitHandler = useCallback(
     (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
       setList([...list, todo]);
-      setTodo("");
+      setTodo({ id: undefined, oneTodo: "" });
     },
     [list, todo]
   );
 
-  const editHandler = ({ todo, index }: { todo: string; index: number }) => {
-    console.log("clicked", { todo, index });
-    setIsEditing(index);
+  const editHandler = (todo: Todo) => {
+    setIsEditing(todo.id);
   };
 
-  const editValueHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setNewTodo(value);
+  const editChangeHandler = (
+    id: Todo["id"],
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setEditTodo({ id: id, oneTodo: e.target.value });
   };
 
-  const saveHandler = (newTodo: string, index: number) => {
-    setList([...list, newTodo]);
+  const saveHandler = () => {
+    setList([...list, editTodo]);
+    setIsEditing(undefined);
   };
 
   return (
@@ -46,37 +56,29 @@ const App = () => {
             type="text"
             className="w-48 rounded mr-4 py-1 px-3"
             onChange={changeHandler}
-            value={todo}
+            value={todo.oneTodo}
           />
-          <button type="submit" className="">
-            submit
-          </button>
+          <button type="submit">submit</button>
         </form>
         <ul className="text-left pl-[20px] pt-4 text-lg">
           {list.map((todo, index) =>
-            isEditing === index ? (
-              <li key={index}>
+            isEditing === todo.id ? (
+              <li>
                 <input
                   type="text"
                   className="w-48 rounded mr-4 py-1 px-3"
-                  onChange={editValueHandler}
-                  value={newTodo}
+                  onChange={(e) => editChangeHandler(todo.id, e)}
+                  value={editTodo.oneTodo}
                 />
-                <button
-                  type="submit"
-                  className=""
-                  onClick={() => saveHandler(newTodo, index)}
-                >
-                  {isEditing === index ? "save" : "edit"}
-                </button>
+                <button onClick={saveHandler}>save</button>
               </li>
             ) : (
-              <li key={index}>
-                {index + 1} . {todo}
+              <li key={todo.id}>
+                {index + 1} . {todo.oneTodo}
                 <button
                   type="submit"
                   className=""
-                  onClick={() => editHandler({ todo, index })}
+                  onClick={() => editHandler(todo)}
                 >
                   edit
                 </button>
