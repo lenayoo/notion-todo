@@ -41,8 +41,14 @@ const App = () => {
   };
 
   const saveHandler = () => {
-    setList([...list, editTodo]);
+    console.log("clicked");
+    const updateList = list.map((item) =>
+      item.id === editTodo.id ? { ...item, oneTodo: editTodo.oneTodo } : item
+    );
+    console.log(updateList);
+    setList(updateList);
     setIsEditing(undefined);
+    setEditTodo({ id: undefined, oneTodo: "" });
   };
 
   return (
