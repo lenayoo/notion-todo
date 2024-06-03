@@ -51,6 +51,13 @@ const App = () => {
     setEditTodo({ id: undefined, oneTodo: "" });
   };
 
+  const deleteHandler = (id: Todo["id"]) => {
+    console.log("delete clicked");
+    const remainList = list.filter((item) => item.id !== id);
+    console.log({ remainList });
+    setList(remainList);
+  };
+
   return (
     <div className="flex justify-center items-center flex-col">
       <div className="header">
@@ -66,6 +73,7 @@ const App = () => {
           />
           <button type="submit">submit</button>
         </form>
+
         <ul className="text-left pl-[20px] pt-4 text-lg">
           {list.map((todo, index) =>
             isEditing === todo.id ? (
@@ -87,6 +95,13 @@ const App = () => {
                   onClick={() => editHandler(todo)}
                 >
                   edit
+                </button>
+                <button
+                  type="submit"
+                  className=""
+                  onClick={() => deleteHandler(todo.id)}
+                >
+                  delete
                 </button>
               </li>
             )
