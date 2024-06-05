@@ -1,5 +1,6 @@
 import { useCallback, useState } from "react";
 import "./App.css";
+import { Button } from "@mui/joy";
 
 const App = () => {
   type Todo = { id: number | undefined; oneTodo: string };
@@ -23,6 +24,10 @@ const App = () => {
   const submitHandler = useCallback(
     (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
+      if (todo.oneTodo === "") {
+        console.error("please enter the input");
+        return;
+      }
       setList([...list, todo]);
       setTodo({ id: undefined, oneTodo: "" });
     },
@@ -71,7 +76,7 @@ const App = () => {
             onChange={changeHandler}
             value={todo.oneTodo}
           />
-          <button type="submit">submit</button>
+          <Button type="submit">submit</Button>
         </form>
 
         <ul className="text-left pl-[20px] pt-4 text-lg">
@@ -84,25 +89,25 @@ const App = () => {
                   onChange={(e) => editChangeHandler(todo.id, e)}
                   value={editTodo.oneTodo}
                 />
-                <button onClick={saveHandler}>save</button>
+                <Button onClick={saveHandler}>save</Button>
               </li>
             ) : (
               <li key={todo.id}>
                 {index + 1} . {todo.oneTodo}
-                <button
+                <Button
                   type="submit"
                   className=""
                   onClick={() => editHandler(todo)}
                 >
                   edit
-                </button>
-                <button
+                </Button>
+                <Button
                   type="submit"
                   className=""
                   onClick={() => deleteHandler(todo.id)}
                 >
                   delete
-                </button>
+                </Button>
               </li>
             )
           )}
